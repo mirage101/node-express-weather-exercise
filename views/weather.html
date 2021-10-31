@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Choose region for your weather forecast</h1>
+        <form action="/weather" method="post">
+            <select id="region">
+                <!-- <option value="Sofia" name="city">Sofia</option> -->
+            </select>
+            <input type="submit" id="submit" value="Get Forecast" />
+        </form>
+        <div id="output">
+            Please select city to display weather data!
+        </div>
+    </div>
+    <script type="text/javascript">
+        const selectRegion = document.querySelector('#region');
+        const output = document.querySelector('#output');
+        const submitBtn = document.querySelector('#submit');
+        
+        async function fetchData() {
+            const response = await fetch('/weather');
+            const data = await response.json();
+            console.log(response)
+            data.forEach(obj => {
+                selectRegion.innerHTML+= `<option value="${obj['city']}" name="city_name">${obj['city']}</option>`;
+                console.log(obj['city']);
+                console.log('-------------------');
+            });
+        }
+        async function fetchResData() {
+            const response = await fetch('/weather');
+            const data = await response.json();
+            var select = document.getElementById('region');
+            var selEl = select.options[select.selectedIndex].value;
+            console.log(select.selectedIndex)
+            console.log(data[select.selectedIndex])
+            output.innerHTML =`
+            <h4>Selected city is: ${selEl}</h4>
+              <div>${data[select.selectedIndex]['city']} - ${data[select.selectedIndex]['temperature']} C - ${data[select.selectedIndex]['wind_speed']} m/s -
+                   ${data[select.selectedIndex]['humidity']} % - ${data[select.selectedIndex]['visibility']} m
+               `;
+           
+        }
+
+        fetchData();
+
+
+        submitBtn.addEventListener('submit', (e) =>{
+            e.preventDefault();
+        });
+
+        // submitBtn.addEventListener('click', (e) =>{
+        //     e.preventDefault();
+        //     fetchResData();
+        // });
+        
+    </script>
+</body>
+</html>
