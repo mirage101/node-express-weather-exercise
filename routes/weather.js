@@ -1,14 +1,17 @@
 const router = require('express').Router();
+var fs = require("fs");
 const data = require('../data/weather_data.json');
-const fs = require("fs");
+var selCity;
 
 router.get('/', function (req, res) {  
-    fs.readFile('./views/weather.html', (err, data) => {
+        fs.readFile('./views/weather.html', (err, data) => {
         if(err){
             console.log(err);
             res.end();
         }
-        res.end(data);
+        res.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
+        res.write(data);
+        res.end();
     });
 })
 router.get('/weather', function (req, res) {
@@ -16,9 +19,14 @@ router.get('/weather', function (req, res) {
     res.json(data);
 });
 router.post('/weather', function(req, res) {
-    var city = req.body.city_name;
+    res.setHeader('Content-Type', 'application/json');
+    selCity=[];
+    var city = req.body;
     console.log(city)
-    res.redirect('/');
+    selCity.push(city);
+    res.redirect('/');    
 });
+
+
 
 module.exports = router;

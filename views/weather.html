@@ -23,14 +23,17 @@
         </div>
     </div>
     <script type="text/javascript">
+       
+
         const selectRegion = document.querySelector('#region');
         const output = document.querySelector('#output');
         const submitBtn = document.querySelector('#submit');
         
         async function fetchData() {
+            
             const response = await fetch('/weather');
             const data = await response.json();
-            console.log(response)
+            console.log(response, data)
             data.forEach(obj => {
                 selectRegion.innerHTML+= `<option value="${obj['city']}" name="city_name">${obj['city']}</option>`;
                 console.log(obj['city']);
@@ -53,16 +56,32 @@
         }
 
         fetchData();
+        fetchResData();
 
-
-        submitBtn.addEventListener('submit', (e) =>{
+        const sendCityData = async(city) => {            
+            const settings = {  
+                method:'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body : JSON.stringify({ 
+                            city: city, 
+                        })     
+                };
+                try{ 
+                    
+                    await fetch('/weather', settings)     
+                } catch(error) {         
+                    console.log(error)
+                } 
+            };
+        
+        submitBtn.addEventListener('click', (e) =>{
             e.preventDefault();
+            var select = document.getElementById('region');
+            var selEl = select.options[select.selectedIndex].value;
+            sendCityData(selEl);
+            fetchResData();
         });
 
-        // submitBtn.addEventListener('click', (e) =>{
-        //     e.preventDefault();
-        //     fetchResData();
-        // });
         
     </script>
 </body>
