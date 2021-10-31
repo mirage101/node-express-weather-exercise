@@ -1,5 +1,5 @@
 "# node-express-weather-exercise" 
-Weather node express app
+- Weather node express app
 
 Install
 - npm install
